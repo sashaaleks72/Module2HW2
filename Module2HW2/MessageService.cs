@@ -17,5 +17,10 @@ namespace Module2HW2
             Console.WriteLine(msg);
             Console.ForegroundColor = ConsoleColor.White;
         }
+
+        public void ShowMsg(string msg)
+        {
+            Console.Write(msg);
+        }
     }
 }

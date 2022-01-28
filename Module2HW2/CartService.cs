@@ -8,15 +8,17 @@ namespace Module2HW2
         private int _quantityOfSelectedProds;
         private MessageService _message;
         private ShoppingCart _shoppingCart;
+        private Catalog _catalog;
 
         public CartService(ShoppingCart shoppingCart, Catalog catalog)
         {
             _message = new MessageService();
             _shoppingCart = shoppingCart;
-            Catalog = catalog;
+            _catalog = catalog;
         }
 
-        public Catalog Catalog { get; set; }
+        public Catalog Catalog => _catalog;
+        public ShoppingCart ShoppingCart => _shoppingCart;
 
         public bool CheckTotalQuantity()
         {
@@ -30,7 +32,7 @@ namespace Module2HW2
             return bigAmountOfSelectedProducts;
         }
 
-        public void AddToCart()
+        public ShoppingCart AddToCart()
         {
             _quantityOfSelectedProds = 0;
 
@@ -103,49 +105,8 @@ namespace Module2HW2
             {
                 _message.ShowErrorMsg("The number of selected products is more than 10!");
             }
-        }
 
-        public Order MakeAnOrder()
-        {
-            Order order;
-            bool negativeQuantity = false;
-
-            for (int i = 0; i < _shoppingCart.SelectedProducts.Length; i++)
-            {
-                for (int j = 0; j < Catalog.Products.Length; j++)
-                {
-                    if (_shoppingCart.SelectedProducts[i].Name == Catalog.Products[j].Name)
-                    {
-                        if (_shoppingCart.SelectedProducts[i].Quantity <= Catalog.Products[j].Quantity)
-                        {
-                            Catalog.Products[j].Quantity -= _shoppingCart.SelectedProducts[i].Quantity;
-                        }
-                        else
-                        {
-                            negativeQuantity = true;
-                        }
-                    }
-                }
-            }
-
-            if (negativeQuantity)
-            {
-                order = null;
-                _message.ShowErrorMsg("The number of selected products is more than exists in stock!");
-            }
-            else if (CheckTotalQuantity())
-            {
-                order = null;
-                _message.ShowErrorMsg("Reduce the number of items!");
-                _quantityOfSelectedProds = 0;
-            }
-            else
-            {
-                order = new Order(_shoppingCart.SelectedProducts);
-                _message.ShowSuccessMsg($"Order successfully completed\nNumber of order: {order.Id}");
-            }
-
-            return order;
+            return _shoppingCart;
         }
     }
 }
